@@ -1,0 +1,86 @@
+# ============================================================
+#  EterVelocityResource (proxy) : les mondes ressources
+# ============================================================
+#
+#  Serveurs « monde ressource » jetables, créés et supprimés sur Pterodactyl par l'orchestrateur
+#  d'EterVelocityLib (famille « eterresource »). Chaque nouveau serveur = un monde neuf ; au bout de
+#  max-lifetime-hours, il est vidé puis remplacé. L'accès (créneau payé ou clé), les règles et les
+#  bonus de métier sont gérés côté Paper par EterResource.
+#
+#  Modèle, dans plugins/etervelocityresource/template/ :
+#    template.zip (ou template.tar.gz)  le serveur sans les plugins Eter : server.properties, eula.txt,
+#                        bukkit.yml, spigot.yml, config/ (secret Velocity), plugins/ tiers et leur config
+#                        (LuckPerms...). PAS de monde : il est généré neuf à chaque serveur.
+#    EterLib-config.yml  ta config d'EterLib habituelle avec server-name: '%server%' et
+#                        server-display-name: '%display%' (accès à la base lus aussi par l'orchestrateur).
+#
+#  SÉCURITÉ : ne supprime QUE les serveurs de la table eterresource_servers, appartenant à owner-user-id ET
+#  portant l'identifiant externe eterresource:<nom>. Commence en dry-run. /eterresourcepool status | list.
+#  Ne mets jamais ces clés ailleurs que dans ce fichier.
+orchestrator:
+  enabled: false
+  dry-run: true
+
+  panel:
+    # Adresse du panel, en https:// (obligatoire : les clés et les accès à la base y passent).
+    url: 'https://panel.example.com'
+    # Clé Application (ptla_...) : Admin > Application API (serveurs en lecture/écriture ; locations, nœuds,
+    # ports, utilisateurs, nests et œufs en lecture).
+    application-key: ''
+    # Clé Client (ptlc_...) CRÉÉE AVEC LE COMPTE DÉDIÉ aux serveurs jetables : Compte > API Credentials.
+    client-key: ''
+    # Identifiant du compte dédié, propriétaire de tous les serveurs jetables (Admin > Users).
+    owner-user-id: 0
+    # Location où créer les serveurs (Admin > Locations) : le panel choisit lui-même le nœud et un port libre
+    # (déploiement automatique).
+    location-id: 0
+    # Facultatif : plage de ports où le panel peut choisir, ex : '25600-25700' ; vide = n'importe quel port libre.
+    port-range: ''
+    # Adresse à laquelle le proxy joint les serveurs ; vide = celle du port dans le panel (alias, sinon IP).
+    connect-host: ''
+    # Œuf Paper (Nests > Minecraft) : nest-id et egg-id.
+    nest-id: 1
+    egg-id: 2
+    # Vides = ceux de l'œuf.
+    docker-image: ''
+    startup: ''
+    # Variables de l'œuf à forcer (les autres prennent leur valeur par défaut).
+    environment:
+      MINECRAFT_VERSION: '26.2'
+      BUILD_NUMBER: latest
+    memory-mb: 4096
+    cpu-percent: 200
+    disk-mb: 10240
+
+  # Jeton GitHub en lecture seule (facultatif mais conseillé : sans lui, 60 appels par heure).
+  github-token: ''
+
+  # Plugins téléchargés depuis la dernière release : "Organisation/Dépôt", ou "Organisation/Dépôt:DébutDuJar"
+  # quand le dépôt publie plusieurs jars (EterTab : le jar Paper).
+  plugins:
+    - Eternom/EterLib
+    - Eternom/EterResource
+    - Eternom/EterChat
+    - Eternom/EterTab:EterTab-Paper
+    - Eternom/EterSync
+    - Eternom/EterEssential
+    - Eternom/EterMarket
+    - Eternom/EterEconomy
+
+  # Règles de la famille « eterresource ».
+  servers:
+    name-prefix: ressource
+    # Nom montré aux joueurs ({n} = numéro du serveur).
+    display-name: 'Ressource {n}'
+    # Toujours au moins ce nombre de serveurs à jour, jamais plus que maximum (hors remplacement d'une version).
+    minimum: 1
+    maximum: 4
+    # Joueurs par serveur (comme max-players du modèle), et remplissage à partir duquel on en crée un de plus.
+    capacity: 20
+    scale-up-at: 0.7
+    # Un serveur en trop, vide depuis ce temps, est vidé puis supprimé.
+    idle-minutes: 10
+    # Un serveur vidé est supprimé dès qu'il est vide, au plus tard après ce temps (joueurs envoyés ailleurs).
+    drain-timeout-minutes: 60
+    # Durée de vie maximale d'un serveur, en heures (0 = sans limite) : ensuite il est vidé et un monde neuf le remplace.
+    max-lifetime-hours: 12
