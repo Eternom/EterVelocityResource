@@ -7,12 +7,13 @@
 #  max-lifetime-hours, il est vidé puis remplacé. L'accès (créneau payé ou clé), les règles et les
 #  bonus de métier sont gérés côté Paper par EterResource.
 #
-#  Modèle, dans plugins/etervelocityresource/template/ :
-#    template.zip (ou template.tar.gz)  le serveur sans les plugins Eter : server.properties, eula.txt,
-#                        bukkit.yml, spigot.yml, config/ (secret Velocity), plugins/ tiers et leur config
-#                        (LuckPerms...). PAS de monde : il est généré neuf à chaque serveur.
-#    EterLib-config.yml  ta config d'EterLib habituelle avec server-name: '%server%' et
-#                        server-display-name: '%display%' (accès à la base lus aussi par l'orchestrateur).
+#  Rien à préparer : sans modèle, l'orchestrateur écrit lui-même eula.txt, server.properties
+#  (derrière le proxy, + server-properties ci-dessous) et le secret Velocity (config/paper-global.yml) ;
+#  Paper génère le reste et un monde neuf. La config d'EterLib des serveurs est celle commune à toutes
+#  les familles : plugins/etervelocitylib/EterLib-config.yml (avec server-name: '%server%' et
+#  server-display-name: '%display%').
+#  Facultatif : un modèle plugins/etervelocityresource/template/template.zip (ou .tar.gz), comme pour les
+#  lobbys ; il fournit alors TOUT le serveur (rien n'est généré), SANS monde dedans. Utile pour LuckPerms.
 #
 #  SÉCURITÉ : ne supprime QUE les serveurs de la table eterresource_servers, appartenant à owner-user-id ET
 #  portant l'identifiant externe eterresource:<nom>. Commence en dry-run. /eterresourcepool status | list.
@@ -52,6 +53,11 @@ orchestrator:
     cpu-percent: 200
     disk-mb: 10240
 
+  # Lignes de server.properties en plus, pour les serveurs sans modèle.
+  server-properties:
+    difficulty: hard
+    view-distance: '10'
+    simulation-distance: '8'
   # Jeton GitHub en lecture seule (facultatif mais conseillé : sans lui, 60 appels par heure).
   github-token: ''
 
