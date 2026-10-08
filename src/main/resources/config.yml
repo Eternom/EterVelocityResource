@@ -63,6 +63,7 @@ orchestrator:
 
   # Plugins téléchargés depuis la dernière release : "Organisation/Dépôt", ou "Organisation/Dépôt:DébutDuJar"
   # quand le dépôt publie plusieurs jars (EterTab : le jar Paper).
+  # Aussi des plugins tiers publiés sur GitHub (Vault : l'argent, pour EterEconomy).
   plugins:
     - Eternom/EterLib
     - Eternom/EterResource
@@ -72,6 +73,7 @@ orchestrator:
     - Eternom/EterEssential
     - Eternom/EterMarket
     - Eternom/EterEconomy
+    - MilkBowl/Vault
 
   # Règles de la famille « eterresource ».
   servers:
