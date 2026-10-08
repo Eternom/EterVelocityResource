@@ -73,6 +73,7 @@ orchestrator:
     - Eternom/EterEssential
     - Eternom/EterMarket
     - Eternom/EterEconomy
+    - Eternom/EterModeration
     - MilkBowl/Vault
 
   # Règles de la famille « eterresource ».
