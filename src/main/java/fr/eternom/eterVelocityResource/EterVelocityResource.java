@@ -27,7 +27,7 @@ import java.util.Optional;
  * d'un serveur qu'on supprime vont sur un autre monde ressource (leur temps continue) ; s'il n'y en a pas, ils sont
  * renvoyés au lobby (EterVelocityLobby). L'accès, les règles et les bonus sont dans EterResource, côté Paper.
  */
-@Plugin(id = "etervelocityresource", name = "EterVelocityResource", version = "1.0.3", authors = {"NadTum"},
+@Plugin(id = "etervelocityresource", name = "EterVelocityResource", version = "1.0.4", authors = {"NadTum"},
         description = "Mondes ressources jetables (orchestrateur)",
         dependencies = {@Dependency(id = "etervelocitylib")})
 public final class EterVelocityResource {
@@ -68,7 +68,7 @@ public final class EterVelocityResource {
         CommandManager commands = proxy.getCommandManager();
         commands.register(commands.metaBuilder("eterresourcepool").plugin(this).build(),
                 new PoolCommand(pool, messages, "eterresourcepool", PERMISSION));
-        pool.start(dataDirectory.resolve("libs"));
+        pool.start();
     }
 
     @Subscribe
