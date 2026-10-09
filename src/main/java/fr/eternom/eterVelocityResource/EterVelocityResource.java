@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -27,7 +26,7 @@ import java.util.Optional;
  * d'un serveur qu'on supprime vont sur un autre monde ressource (leur temps continue) ; s'il n'y en a pas, ils sont
  * renvoyés au lobby (EterVelocityLobby). L'accès, les règles et les bonus sont dans EterResource, côté Paper.
  */
-@Plugin(id = "etervelocityresource", name = "EterVelocityResource", version = "1.0.4", authors = {"NadTum"},
+@Plugin(id = "etervelocityresource", name = "EterVelocityResource", version = "1.0.5", authors = {"NadTum"},
         description = "Mondes ressources jetables (orchestrateur)",
         dependencies = {@Dependency(id = "etervelocitylib")})
 public final class EterVelocityResource {
@@ -63,8 +62,7 @@ public final class EterVelocityResource {
             return;
         }
         // Pas de repli propre : un autre monde ressource (choisi par le moteur), sinon renvoi au lobby à la suppression
-        pool = new ServerPool(this, proxy, logger, config, dataDirectory, "eterresource",
-                List.of("eter_servers", "eterresource_worlds"), except -> Optional.empty());
+        pool = new ServerPool(this, proxy, logger, config, dataDirectory, "eterresource", except -> Optional.empty());
         CommandManager commands = proxy.getCommandManager();
         commands.register(commands.metaBuilder("eterresourcepool").plugin(this).build(),
                 new PoolCommand(pool, messages, "eterresourcepool", PERMISSION));
